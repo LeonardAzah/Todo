@@ -1,0 +1,49 @@
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+
+model User{
+  id            String         @id             @default(uuid())
+  email         String      @unique
+  name          String?
+  password        String
+  role            UserRole @default(USER)
+  createdAt     DateTime    @default(now())
+  updateAt      DateTime    @updatedAt
+  token         Token?
+  tasks          Task[]
+}
+enum UserRole {
+  USER
+  ADMIN
+}
+model Token{
+  id            String        @id @default(uuid())
+  refreshToken           String  
+  ip                String
+  userAgent         String
+  isValid             Boolean @default(true)    
+  createdAt     DateTime    @default(now())
+  updateAt      DateTime    @updatedAt
+  userId        String      @unique 
+  user          User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Task{
+id            String        @id @default(uuid())
+title          String       
+completed     Boolean      @default(false)
+ createdAt     DateTime    @default(now())
+  updateAt      DateTime    @updatedAt
+  userId          String
+  user          User          @relation(fields: [userId], references: [id])
+
+}
