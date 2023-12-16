@@ -1,6 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const { StatusCodes } = require("http-status-codes");
-const CustomError = require("../errors");
+const redis = require("redis");
 
 const prisma = new PrismaClient();
 
